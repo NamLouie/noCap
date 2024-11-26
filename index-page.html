@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peer to Peer Mentoring</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .navbar-nav .nav-link {
+            font-weight: 500;
+            color: #000;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link:focus,
+        .navbar-nav .nav-link:active {
+            color: #000;
+            background-color: #d3d3d3;
+            border-radius: 5px;
+        }
+
+        .hero-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 0;
+            background: linear-gradient(to right, #222025, #326fd8);
+            color: white;
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+        }
+
+        .hero-text h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+        }
+
+        .hero-text p,
+        .hero-text ul {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .mentor-card {
+            border: none;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            background-color: #fff;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 30px;
+            color: #000;
+        }
+
+        .mentor-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .mentor-card img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+
+        .mentor-card h5 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .mentor-card p {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .mentor-card .email,
+        .mentor-card .availability {
+            font-size: 0.9rem;
+            color: #000;
+            margin-bottom: 10px;
+        }
+
+        .mentor-card .btn-request {
+            background-color: #326fd8;
+            border-color: #6a11cb;
+            color: #fff;
+            border-radius: 30px;
+            padding: 10px 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .mentor-card .btn-request:hover {
+            background-color: #2575fc;
+            border-color: #2575fc;
+            transform: scale(1.05);
+        }
+
+        .mentor-cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .hero-text h1 {
+                font-size: 3rem;
+            }
+
+            .hero-text p,
+            .hero-text ul {
+                font-size: 1.25rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-section {
+                padding: 50px 0;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-text p,
+            .hero-text ul {
+                font-size: 1rem;
+            }
+
+            .mentor-card img {
+                width: 80px;
+                height: 80px;
+            }
+
+            .mentor-card h5 {
+                font-size: 1.25rem;
+            }
+
+            .mentor-card p {
+                font-size: 0.9rem;
+            }
+
+            .mentor-card .email,
+            .mentor-card .availability {
+                font-size: 0.8rem;
+            }
+        }
+
+        .footer {
+            background-color: #f8f9fa;
+            border-top: 1px solid #eaeaea;
+            padding: 20px 0;
+        }
+
+        .footer .logo {
+            margin-bottom: 10px;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header Section -->
+    <header class="p-3 border-bottom bg-light">
+        <div class="container-fluid">
+            <div class="d-flex flex-wrap align-items-center justify-content-between">
+                <!-- Logo Section -->
+                <a href="index-page.html" class="d-flex align-items-center mb-2 mb-lg-0 text-decoration-none">
+                    <img src="image/holotech.png" alt="University Logo" width="50" height="50">
+                </a>
+                <!-- Navigation Links -->
+                <ul class="nav me-auto mb-2 mb-lg-0" id="navLinks">
+                    <li class="nav-item d-none" id="profileLink"><a href="profile-page.html" class="nav-link px-2 text-black custom-hover">Profile</a></li>
+                    <li class="nav-item d-none" id="mentorMenteeLink"><a href="mentor-mentee-page.html" class="nav-link px-2 text-black custom-hover">Mentor/Mentee</a></li>
+                    <li class="nav-item d-none" id="reportsLink"><a href="report-page.html" class="nav-link px-2 text-black custom-hover">Reports</a></li>
+                    <li class="nav-item d-none" id="requestLink"><a href="request-page.html" class="nav-link px-2 text-black custom-hover">Request</a></li>
+                </ul>
+                <!-- Action Buttons -->
+                <div class="d-flex align-items-center" id="authButtons">
+                    <a href="login-page.html" class="btn btn-outline-primary me-2">Login</a>
+                    <a href="sign-up-page.html" class="btn btn-primary">Sign Up</a>
+                </div>
+                <div class="d-flex align-items-center d-none" id="userDropdown">
+                    <i class="fas fa-bell notification-icon"></i>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="image/user.png" alt="Profile" width="30" height="30" class="rounded-circle">
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="profile-page.html">Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="signOutButton">Sign Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <div class="row align-items-center">
+                <div class="col-lg-6 hero-text">
+                    <h1>USA Peer to Peer</h1>
+                    <p>The mentoring program at the University of San Agustin aims to leverage the existing knowledge, skills, and experience of junior and senior BSCS and BSIT students to support and guide freshman and sophomore students in these programs.</p>
+                    <p>Benefits of Peer to Peer Mentoring:</p>
+                    <ul>
+                        <li>Connect with experienced mentors in your field.</li>
+                        <li>Engage in collaborative learning with peers.</li>
+                        <li>Receive personalized academic support and guidance.</li>
+                    </ul>
+                </div>
+                <div class="col-lg-6 d-flex flex-wrap justify-content-center mentor-cards-container" id="mentorsContainer">
+                    <!-- Mentor cards will be populated here -->
+                    <div class="mentor-card">
+                        <img src="image/user.png" alt="Web Development Mentor" class="mb-3 rounded-circle">
+                        <h5 class="mb-2">John</h5>
+                        <p class="mb-1">Mentor</p>
+                        <p class="font-weight-bold">Web Development</p>
+                        <p class="email"><strong>Email:</strong> example@example.com</p>
+                        <p class="availability"><strong>Availability:</strong> From 9 AM to 5 PM</p>
+                        <p class="mb-3">⭐ ⭐ ⭐ ⭐ ⭐</p>
+                        <button class="btn btn-request">Request</button>
+                    </div>
+                    <div class="mentor-card">
+                        <img src="image/user.png" alt="Data Science Mentor" class="mb-3 rounded-circle">
+                        <h5 class="mb-2">Mike</h5>
+                        <p class="mb-1">Mentee</p>
+                        <p class="font-weight-bold">Data Science</p>
+                        <p class="email"><strong>Email:</strong> example@example.com</p>
+                        <p class="availability"><strong>Availability:</strong> From 9 AM to 5 PM</p>
+                        <p class="mb-3">⭐ ⭐ ⭐ ⭐</p>
+                        <button class="btn btn-request">Request</button>
+                    </div>
+                    <div class="mentor-card">
+                        <img src="image/user.png" alt="Graphic Design Mentor" class="mb3 rounded-circle">
+                        <h5 class="mb-2">Mae</h5>
+                        <p class="mb-1">Mentee</p>
+                        <p class="font-weight-bold">Graphic Design</p>
+                        <p class="email"><strong>Email:</strong> example@example.com</p>
+                        <p class="availability"><strong>Availability:</strong> From 9 AM to 5 PM</p>
+                        <p class="mb-3">⭐ ⭐ ⭐ ⭐ ⭐</p>
+                        <button class="btn btn-request">Request</button>
+                    </div>
+                    <div class="mentor-card">
+                        <img src="image/user.png" alt="Marketing Mentor" class="mb-3 rounded-circle">
+                        <h5 class="mb-2">Rien</h5>
+                        <p class="mb-1">Mentor</p>
+                        <p class="font-weight-bold">Marketing</p>
+                        <p class="email"><strong>Email:</strong> example@example.com</p>
+                        <p class="availability"><strong>Availability:</strong> From 9 AM to 5 PM</p>
+                        <p class="mb-3">⭐ ⭐ ⭐ ⭐</p>
+                        <button class="btn btn-request">Request</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <footer class="footer py-3 my-lg-1 text-center">
+            <a href="index-page.html" class="logo d-block mb-2">
+                <img src="image/holotech.png" alt="Company Logo" width="50" height="50">
+            </a>
+            <p class="text-body-secondary">&copy; 2024 PASS</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('get_user_info.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'logged_in') {
+                        document.getElementById('authButtons').classList.add('d-none');
+                        document.getElementById('userDropdown').classList.remove('d-none');
+
+                        // Update navbar link text based on user role
+                        const mentorMenteeLink = document.getElementById('mentorMenteeLink').firstChild;
+                        if (data.role === 'mentor') {
+                            mentorMenteeLink.textContent = 'Mentees';
+                        } else if (data.role === 'mentee') {
+                            mentorMenteeLink.textContent = 'Mentors';
+                        }
+
+                        // Show the navigation links
+                        document.getElementById('profileLink').classList.remove('d-none');
+                        document.getElementById('mentorMenteeLink').classList.remove('d-none');
+                        document.getElementById('reportsLink').classList.remove('d-none');
+                        document.getElementById('requestLink').classList.remove('d-none');
+                    } else {
+                        console.log('No user is logged in.');
+                        document.querySelectorAll('.disabled-link').forEach(link => {
+                            link.addEventListener('click', function (event) {
+                                event.preventDefault();
+                                alert('You must be logged in to access this page.');
+                            });
+                        });
+                    }
+                });
+
+            document.getElementById('signOutButton').addEventListener('click', function () {
+                fetch('logout.php')
+                    .then(() => {
+                        window.location.href = 'login-page.html';
+                    });
+            });
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybVuL2FmA0ynTt1zI4eCB4IbFWR3tG2D8OCN+OBp1zsglWhD+" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-QZfGGA4GZchTJLbOW1R5LPCGd8U+V7gL27PpmmO+b7kkX8lM8v+hZfu6nlg/UJAw" crossorigin="anonymous"></script>
+</body>
+
+</html>

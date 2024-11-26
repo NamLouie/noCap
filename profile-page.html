@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.13.18/jquery.timepicker.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .navbar-nav .nav-link {
+            font-weight: 500;
+            color: #000;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link:focus,
+        .navbar-nav .nav-link:active {
+            color: #000;
+            background-color: #d3d3d3;
+            border-radius: 5px;
+        }
+
+        .nav-link.custom-hover:hover {
+            background-color: #d3d3d3;
+        }
+
+        .hero-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 0;
+            background: linear-gradient(to right, #222025, #326fd8);
+            color: white;
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: #000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-profile img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border: none;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .error-message {
+            color: red;
+            display: none;
+        }
+
+        .card-header {
+            background: transparent;
+            border-bottom: none;
+        }
+
+        .mentee-profile img {
+            width: 30px;
+            height: 30px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+        }
+
+        .card-body {
+            text-align: left;
+        }
+
+        .card-text {
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .btn-custom {
+            width: 100%;
+        }
+
+        .profile-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-section h5 {
+            font-size: 1.5rem;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .profile-section p {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .profile-section button {
+            margin-top: 10px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .modal .modal-dialog {
+            max-width: 400px;
+        }
+
+        .modal .modal-content {
+            padding: 20px;
+        }
+
+        .modal .modal-footer {
+            justify-content: center;
+        }
+
+        .list-group-item {
+            border: none;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .list-group-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .equal-height {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .equal-height .card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .loading-indicator {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .rating-display {
+            color: #FFD700;
+            font-size: 1.2em;
+        }
+
+        .rating-display .star {
+            font-size: 1.2em;
+        }
+
+        .rating-stars {
+            display: flex;
+            align-items: center;
+        }
+
+        .rating-stars span {
+            font-size: 1.5rem;
+            color: #FFD700;
+            margin-right: 5px;
+        }
+
+        .scrollable-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 768px) {
+            .card-profile img {
+                width: 120px;
+                height: 120px;
+            }
+
+            .profile-section h5 {
+                font-size: 1.25rem;
+            }
+
+            .profile-section p {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-section {
+                padding: 20px 0;
+            }
+
+            .card-profile img {
+                width: 100px;
+                height: 100px;
+            }
+
+            .profile-section h5 {
+                font-size: 1rem;
+            }
+
+            .profile-section p {
+                font-size: 0.8rem;
+            }
+        }
+        .footer {
+            background-color: #f8f9fa;
+            border-top: 1px solid #eaeaea;
+            padding: 20px 0;
+        }
+
+        .footer .logo {
+            margin-bottom: 10px;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header Section -->
+    <header class="p-3 border-bottom bg-light">
+        <div class="container-fluid">
+            <div class="d-flex flex-wrap align-items-center justify-content-between">
+                <a href="index-page.html" class="d-flex align-items-center mb-2 mb-lg-0 text-decoration-none">
+                    <img src="image/holotech.png" alt="University Logo" width="50" height="50">
+                </a>
+                <ul class="nav me-auto mb-2 mb-lg-0" id="navLinks">
+                    <li><a href="profile-page.html" class="nav-link px-2 text-black custom-hover fw-bolder">Profile</a></li>
+                    <li><a href="mentor-mentee-page.html" class="nav-link px-2 text-black custom-hover" id="mentorMenteeLink">Mentor/Mentee</a></li>
+                    <li><a href="report-page.html" class="nav-link px-2 text-black custom-hover">Reports</a></li>
+                    <li><a href="request-page.html" class="nav-link px-2 text-black custom-hover">Request</a></li>
+                </ul>
+                <div class="d-flex align-items-center" id="authButtons">
+                    <a href="login-page.html" class="btn btn-outline-primary me-2">Login</a>
+                    <a href="sign-up.html" class="btn btn-primary">Sign Up</a></div>
+                <div class="d-flex align-items-center d-none" id="userDropdown">
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="image/user.png" alt="Profile" width="30" height="30" class="rounded-circle">
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="profile-page.html">Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="login-page.html" id="signOutButton">Sign Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Profile Section -->
+    <section class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <div class="row align-items-center">
+                <div class="col-lg-4 col-md-12 mb-4">
+                    <div class="card text-center equal-height">
+                        <div class="card-header profile-section">
+                            <img id="profilePic" src="image/user.png" class="card-img-top card-profile" alt="Profile Picture">
+                            <input type="text" id="profileName" class="form-control text-center" readonly>
+                            <p class="card-text" id="role">Role</p>
+                            <p class="card-text" id="specialization">Specialization</p>
+                        </div>
+                        <div class="card-body">
+                            <input type="file" id="profilePicInput" accept="image/*" style="display: none;" onchange="previewProfilePic(event)">
+                            <div id="profileDetails">
+                                <h5 class="card-title">Specialization</h5>
+                                <p class="card-text" id="specializationText">Specialization</p>
+                                <h5 class="card-title">Topic</h5>
+                                <p class="card-text" id="topic">Topic</p>
+                                <h5 class="card-title">Contact Information</h5>
+                                <p class="card-text" id="email">Email</p>
+                                <p class="card-text" id="phone">Phone</p>
+                                <h5 class="card-title">Time Availability</h5>
+                                <p class="card-text" id="availability">Availability</p>
+                                <h5 class="card-title">Course</h5>
+                                <p class="card-text" id="courseSection">Course</p>
+                                <button id="editProfileBtn" class="btn btn-primary btn-custom" onclick="toggleEditProfile()">Edit Profile</button>
+                                <button id="saveProfileBtn" class="btn btn-success btn-custom" onclick="saveProfile()" style="display: none;">Save Profile</button>
+                                <button id="cancelEditBtn" class="btn btn-secondary btn-custom" onclick="cancelEditProfile()" style="display: none;">Cancel</button>
+                                <p class="error-message" id="errorMessage">An error occurred while saving the profile. Please try again.</p>
+                                <button id="viewDetailsBtn" class="btn btn-info btn-custom mt-3" onclick="viewDetails()">View Details on Mentor/Mentee Page</button>
+                                <div class="loading-indicator" id="loadingIndicator">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="profileEditForm" style="display: none;">
+                                <div class="form-group">
+                                    <label for="firstNameInput">First Name</label>
+                                    <input type="text" class="form-control mb-3" id="firstNameInput">
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastNameInput">Last Name</label>
+                                    <input type="text" class="form-control mb-3" id="lastNameInput">
+                                </div>
+                                <div class="form-group">
+                                    <label for="specializationInput">Specialization</label>
+                                    <input type="text" class="form-control mb-3" id="specializationInput" oninput="updateSpecialization()">
+                                </div>
+                                <div class="form-group">
+                                    <label for="topicInput">Topic</label>
+                                    <input type="text" class="form-control mb-3" id="topicInput" oninput="updateTopic()">
+                                </div>
+                                <div class="form-group">
+                                    <label for="phoneInput">Phone</label>
+                                    <input type="text" class="form-control mb-3" id="phoneInput">
+                                </div>
+                                <div class="form-group">
+                                    <label for="availabilityStartInput">Time Availability Start</label>
+                                    <input type="text" class="form-control mb-3 timepicker" id="availabilityStartInput">
+                                </div>
+                                <div class="form-group">
+                                    <label for="availabilityEndInput">Time Availability End</label>
+                                    <input type="text" class="form-control mb-3 timepicker" id="availabilityEndInput">
+                                </div>
+                                <div class="form-group">
+                                    <label for="courseSectionInput">Course</label>
+                                    <select class="form-control mb-3" id="courseSectionInput">
+                                        <option value="Computer Science">Computer Science</option>
+                                        <option value="Information Technology">Information Technology</option>
+                                    </select>
+                                </div>
+                                <button id="saveProfileEditBtn" class="btn btn-success btn-custom mt-3" onclick="saveProfile()">Save Profile</button>
+                                <button id="cancelProfileEditBtn" class="btn btn-secondary btn-custom mt-3" onclick="cancelEditProfile()">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8 col-md-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card mb-3 equal-height">
+                                <div class="card-body scrollable-list">
+                                    <h5 class="card-title" id="listTitle">Accepted List</h5>
+                                    <ul class="list-group" id="acceptedList">
+                                        <!-- Dynamic content will be added here -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Feedback List -->
+                        <div class="col-12">
+                            <div class="card equal-height">
+                                <div class="card-body scrollable-list">
+                                    <h5 class="card-title">Feedback</h5>
+                                    <ul class="list-group" id="feedbackList">
+                                        <!-- Dynamic content will be added here -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detailed Profile Modal -->
+    <div class="modal fade" id="userDetailModal" tabindex="-1" aria-labelledby="userDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userDetailModalLabel">User Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <img id="modalProfilePic" src="image/user.png" class="rounded-circle mb-3" width="150" height="150" alt="Profile Picture">
+                        <h5 id="modalProfileName">John Doe</h5>
+                        <p id="modalRole">Role</p>
+                        <p id="modalSpecialization">Specialization</p>
+                    </div>
+                    <h6>Contact Information</h6>
+                    <p id="modalEmail">Email: example@example.com</p>
+                    <p id="modalPhone">Phone: 123-456-7890</p>
+                    <h6>Time Availability</h6>
+                    <p id="modalAvailability">From 9:00 AM to 5:00 PM</p>
+                    <h6>Course</h6>
+                    <p id="modalCourseSection">Course</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cropper.js Modal -->
+    <div class="modal fade" id="cropModal" tabindex="-1" role="dialog" aria-labelledby="cropModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cropModalLabel">Crop Image</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="img-container">
+                        <img id="imageToCrop" src="" alt="Crop Image">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="cropImageBtn">Crop</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <footer class="footer py-3 my-lg-1 text-center">
+            <a href="index-page.html" class="logo d-block mb-2">
+                <img src="image/holotech.png" alt="Company Logo" width="50" height="50">
+            </a>
+            <p class="text-body-secondary">&copy; 2024 PASS</p>
+        </footer>
+    </div>
+    
+
+    <!-- Bootstrap and jQuery JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.13.18/jquery.timepicker.min.js"></script>
+    <script>
+        let isEditing = false;
+let cropper;
+let currentUserID;
+
+document.addEventListener('DOMContentLoaded', () => {
+    initializeProfile();
+    initializeAcceptedList();
+    document.getElementById('signOutButton').addEventListener('click', signOutUser);
+    $('.timepicker').timepicker({
+        minTime: '6:00am',
+        maxTime: '11:30pm',
+        defaultTime: '9:00am',
+        startTime: '6:00am',
+        dynamic: false,
+        dropdown: true,
+        scrollbar: true
+    });
+});
+
+function initializeProfile() {
+    fetch('fetch_user_details.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'logged_in') {
+                currentUserID = data.user_id; // Store the current user ID
+                document.getElementById('authButtons').classList.add('d-none');
+                document.getElementById('userDropdown').classList.remove('d-none');
+
+                const mentorMenteeLink = document.getElementById('mentorMenteeLink');
+                mentorMenteeLink.innerText = data.role === 'mentor' ? 'Mentees' : 'Mentors';
+
+                displayUserProfile(data);
+                loadAcceptedList();
+                loadFeedbackList(data.firstName + ' ' + data.lastName); // Load feedback list for the user
+            } else {
+                console.log('No user is logged in.');
+                document.querySelectorAll('.disabled-link').forEach(link => {
+                    link.addEventListener('click', function (event) {
+                        event.preventDefault();
+                        alert('You must be logged in to access this page.');
+                    });
+                });
+            }
+        })
+        .catch(error => console.error('Error fetching user data:', error));
+}
+
+
+function displayUserProfile(user) {
+    const profilePic = document.getElementById('profilePic');
+    const profileName = document.getElementById('profileName');
+    const role = document.getElementById('role');
+    const specialization = document.getElementById('specialization');
+    const specializationText = document.getElementById('specializationText');
+    const topic = document.getElementById('topic');
+    const email = document.getElementById('email');
+    const phone = document.getElementById('phone');
+    const availability = document.getElementById('availability');
+    const courseSection = document.getElementById('courseSection');
+
+    profilePic.src = user.profilePic || 'image/user.png';
+    profileName.value = `${user.firstName} ${user.lastName}`;
+    role.textContent = user.role;
+    specialization.textContent = user.specialization || 'Specialization';
+    specializationText.textContent = user.specialization || 'Specialization';
+    topic.textContent = user.topic || 'Topic';
+    email.textContent = `Email: ${user.email || 'undefined'}`;
+    phone.textContent = `Phone: ${user.phone || 'undefined'}`;
+    availability.textContent = `From ${user.availabilityStart || 'N/A'} to ${user.availabilityEnd || 'N/A'}`;
+    courseSection.textContent = user.courseSection || 'Course';
+}
+
+
+function toggleEditProfile() {
+    isEditing = !isEditing;
+
+    document.getElementById('profileDetails').style.display = isEditing ? 'none' : 'block';
+    document.getElementById('profileEditForm').style.display = isEditing ? 'block' : 'none';
+    document.getElementById('editProfileBtn').style.display = isEditing ? 'none' : 'block';
+    document.getElementById('saveProfileBtn').style.display = isEditing ? 'block' : 'none';
+    document.getElementById('cancelEditBtn').style.display = isEditing ? 'block' : 'none';
+    document.getElementById('profilePicInput').style.display = isEditing ? 'block' : 'none';
+
+    if (isEditing) {
+        fillEditProfileForm();
+    }
+}
+
+
+function fillEditProfileForm() {
+    const specialization = document.getElementById('specialization').innerText;
+    const topic = document.getElementById('topic').innerText;
+    const phone = document.getElementById('phone').innerText.replace('Phone: ', '');
+    const availability = document.getElementById('availability').innerText.split(' to ');
+    const courseSection = document.getElementById('courseSection').innerText;
+    const fullName = document.getElementById('profileName').value.split(' ');
+    const firstName = fullName[0];
+    const lastName = fullName[1];
+
+    document.getElementById('specializationInput').value = specialization;
+    document.getElementById('topicInput').value = topic;
+    document.getElementById('phoneInput').value = phone;
+    document.getElementById('availabilityStartInput').value = availability[0].replace('From ', '');
+    document.getElementById('availabilityEndInput').value = availability[1];
+    document.getElementById('courseSectionInput').value = courseSection;
+    document.getElementById('firstNameInput').value = firstName;
+    document.getElementById('lastNameInput').value = lastName;
+}
+
+function updateSpecialization() {
+    const specializationInput = document.getElementById('specializationInput').value;
+    document.getElementById('specialization').innerText = specializationInput;
+    document.getElementById('specializationText').innerText = specializationInput;
+}
+
+function updateTopic() {
+    const topicInput = document.getElementById('topicInput').value;
+    document.getElementById('topic').innerText = topicInput;
+}
+
+function cancelEditProfile() {
+    isEditing = false;
+    document.getElementById('profileDetails').style.display = 'block';
+    document.getElementById('profileEditForm').style.display = 'none';
+    document.getElementById('editProfileBtn').style.display = 'block';
+    document.getElementById('saveProfileBtn').style.display = 'none';
+    document.getElementById('cancelEditBtn').style.display = 'none';
+    document.getElementById('profilePicInput').style.display = 'none';
+}
+
+function saveProfile() {
+    const profileData = {
+        firstName: document.getElementById('firstNameInput').value,
+        lastName: document.getElementById('lastNameInput').value,
+        profilePic: document.getElementById('profilePic').src,
+        specialization: document.getElementById('specializationInput').value,
+        topic: document.getElementById('topicInput').value,
+        phone: document.getElementById('phoneInput').value,
+        availabilityStart: document.getElementById('availabilityStartInput').value,
+        availabilityEnd: document.getElementById('availabilityEndInput').value,
+        courseSection: document.getElementById('courseSectionInput').value
+    };
+
+    fetch('save_profile.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(profileData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            displayUserProfile(data.user); // Ensure this function is called with the updated user data
+            toggleEditProfile();
+            alert('Profile updated successfully!');
+        } else {
+            document.getElementById('errorMessage').style.display = 'block';
+        }
+    })
+    .catch(error => {
+        console.error('Error saving profile data:', error);
+        document.getElementById('errorMessage').style.display = 'block';
+    });
+}
+
+
+
+function previewProfilePic(event) {
+    if (isEditing) {
+        const files = event.target.files;
+        if (files && files.length > 0) {
+            const file = files[0];
+            const done = (url) => {
+                document.getElementById('imageToCrop').src = url;
+                $('#cropModal').modal('show');
+            };
+
+            if (URL) {
+                done(URL.createObjectURL(file));
+            } else if (FileReader) {
+                const reader = new FileReader();
+                reader.onload = () => done(reader.result);
+                reader.readAsDataURL(file);
+            }
+        }
+    }
+}
+
+$('#cropModal').on('shown.bs.modal', function () {
+    const image = document.getElementById('imageToCrop');
+    cropper = new Cropper(image, {
+        aspectRatio: 1,
+        viewMode: 1,
+        dragMode: 'move',
+        cropBoxResizable: true,
+        minCropBoxWidth: 150,
+        minCropBoxHeight: 150,
+        cropBoxMovable: true,
+        ready: function () {
+            cropper.setCropBoxData({ width: 150, height: 150 });
+        }
+    });
+}).on('hidden.bs.modal', function () {
+    cropper.destroy();
+    cropper = null;
+});
+
+document.getElementById('cropImageBtn').addEventListener('click', function () {
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    loadingIndicator.style.display = 'block';
+
+    cropper.getCroppedCanvas({ width: 150, height: 150 }).toBlob(blob => {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = () => {
+            const base64data = reader.result;
+            document.getElementById('profilePic').src = base64data;
+            $('#cropModal').modal('hide');
+            loadingIndicator.style.display = 'none';
+
+            // Save the cropped profile picture to the server
+            fetch('save_profile_pic.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ profilePic: base64data })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status !== 'success') {
+                    console.error('Error saving profile picture:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error saving profile picture:', error);
+            });
+        };
+    });
+});
+
+function viewDetails() {
+    window.location.href = 'mentor-mentee-page.html';
+}
+
+function initializeAcceptedList() {
+    loadAcceptedList();
+}
+
+function loadAcceptedList() {
+    fetch('fetch_accepted_profiles.php')
+        .then(response => response.json())
+        .then(data => {
+            const acceptedList = $('#acceptedList');
+            const listTitle = $('#listTitle');
+            acceptedList.empty();
+
+            if (data.status === 'success') {
+                const profiles = data.profiles;
+
+                if (profiles.length === 0) {
+                    acceptedList.append('<li class="list-group-item text-center">No accepted profiles yet.</li>');
+                } else {
+                    listTitle.text(data.role === 'mentor' ? 'Mentee List' : 'Mentor List');
+
+                    profiles.forEach(profile => {
+                        const firstName = profile.firstName || 'N/A';
+                        const lastName = profile.lastName || 'N/A';
+                        const role = profile.role || 'N/A';
+                        const specialization = profile.specialization || 'N/A';
+                        const topic = profile.topic || 'No topic specified';
+                        const status = profile.status || 'Ongoing';
+
+                        const listItem = `
+                            <li class="list-group-item d-flex align-items-center" data-mentor-id="${profile.mentor_id}" data-mentee-id="${profile.mentee_id}" data-role="${data.role}">
+                                <img src="${profile.profilePic || 'image/user.png'}" class="me-3 rounded-circle" width="50" height="50">
+                                <div>
+                                    <h6 class="user-profile-link" style="cursor: pointer;">${firstName} ${lastName}</h6>
+                                    <p class="mb-0">Role: ${role}</p>
+                                    <p class="mb-0">Specialization: ${specialization}</p>
+                                    <p class="mb-0">Topic: ${topic}</p>
+                                    <p class="mb-0 status-text">Status: ${status}</p>
+                                </div>
+                                <div class="ms-auto">
+                                    <button class="btn btn-success btn-sm complete-user-btn" ${status === 'Complete' ? 'disabled' : ''}>Complete</button>
+                                </div>
+                            </li>
+                        `;
+                        acceptedList.append(listItem);
+                    });
+
+                    attachProfileLinkHandlers(profiles);
+                }
+            } else {
+                acceptedList.append('<li class="list-group-item text-center">Failed to load accepted profiles.</li>');
+            }
+        })
+        .catch(error => console.error('Error loading accepted profiles:', error));
+}
+
+function attachProfileLinkHandlers(profiles) {
+    $('.user-profile-link').on('click', function () {
+        const listItem = $(this).closest('li');
+        const mentor_id = listItem.data('mentor-id');
+        const mentee_id = listItem.data('mentee-id');
+        const profile = profiles.find(profile => profile.mentor_id === mentor_id && profile.mentee_id === mentee_id);
+        displayUserProfileInModal(profile);
+    });
+
+    $('.complete-user-btn').on('click', function () {
+        const listItem = $(this).closest('li');
+        const mentor_id = listItem.data('mentor-id');
+        const mentee_id = listItem.data('mentee-id');
+        const user_role = listItem.data('role');
+
+        console.log(`Mentor ID to complete: ${mentor_id}, Mentee ID to complete: ${mentee_id}, Role: ${user_role}`);
+
+        completeUser(mentor_id, mentee_id, user_role, $(this));
+    });
+}
+
+function completeUser(mentor_id, mentee_id, user_role, button) {
+    fetch('complete_accepted_profile.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ mentor_id: mentor_id, mentee_id: mentee_id, user_role: user_role, user_id: currentUserID })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            button.closest('li').find('.status-text').text('Status: Complete');
+            button.prop('disabled', true);
+            alert('User marked as complete!');
+        } else {
+            console.error('Error:', data);
+            alert('Failed to mark user as complete. ' + (data.message || 'Please try again.'));
+        }
+    })
+    .catch(error => {
+        console.error('Error marking user as complete:', error);
+        alert('Failed to mark user as complete. Please try again.');
+    });
+}
+
+function displayUserProfile(user) {
+    const profilePic = document.getElementById('profilePic');
+    const profileName = document.getElementById('profileName');
+    const role = document.getElementById('role');
+    const specialization = document.getElementById('specialization');
+    const specializationText = document.getElementById('specializationText');
+    const topic = document.getElementById('topic');
+    const email = document.getElementById('email');
+    const phone = document.getElementById('phone');
+    const availability = document.getElementById('availability');
+    const courseSection = document.getElementById('courseSection');
+
+    profilePic.src = user.profilePic || 'image/user.png';
+    profileName.value = `${user.firstName} ${user.lastName}`;
+    role.textContent = user.role;
+    specialization.textContent = user.specialization || 'Specialization';
+    specializationText.textContent = user.specialization || 'Specialization';
+    topic.textContent = user.topic || 'Topic';
+    email.textContent = `Email: ${user.email || 'undefined'}`;
+    phone.textContent = `Phone: ${user.phone || 'undefined'}`;
+    availability.textContent = `From ${user.availabilityStart || 'N/A'} to ${user.availabilityEnd || 'N/A'}`;
+    courseSection.textContent = user.courseSection || 'Course';
+}
+
+
+function signOutUser() {
+    fetch('sign_out.php', {
+        method: 'POST'
+    })
+    .then(response => {
+        if (response.ok) {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login-page.html';
+        } else {
+            console.error('Error signing out:', response.statusText);
+        }
+    })
+    .catch(error => console.error('Error signing out:', error));
+}
+
+function loadFeedbackList(name) {
+    fetch(`fetch_feedback.php?name=${encodeURIComponent(name)}`)
+    .then(response => response.json())
+    .then(data => {
+        const feedbackList = document.getElementById('feedbackList');
+        feedbackList.innerHTML = '';
+
+        if (data.status === 'success') {
+            const feedbacks = data.feedbacks;
+
+            if (feedbacks.length === 0) {
+                feedbackList.innerHTML = '<li class="list-group-item text-center">No feedback yet.</li>';
+            } else {
+                feedbacks.forEach(feedback => {
+                    const ratingStars = getRatingStars(feedback.rating);
+                    const listItem = `
+                        <li class="list-group-item">
+                            <h6>${feedback.feedback_giver_name}</h6>
+                            <p>${feedback.feedback}</p>
+                            ${feedback.rating ? `<div class="rating-stars">${ratingStars}</div>` : ''}
+                            <p>Date: ${feedback.feedback_date}</p>
+                        </li>
+                    `;
+                    feedbackList.innerHTML += listItem;
+                });
+            }
+        } else {
+            feedbackList.innerHTML = '<li class="list-group-item text-center">Failed to load feedback.</li>';
+        }
+    })
+    .catch(error => console.error('Error loading feedback:', error));
+}
+
+function getRatingStars(rating) {
+    let stars = '';
+    for (let i = 0; i < rating; i++) {
+        stars += '<span>★</span>';
+    }
+    for (let i = rating; i < 5; i++) {
+        stars += '<span>☆</span>';
+    }
+    return stars;
+}
+
+// Example usage: load feedback for the specific user
+const userName = "John Doe"; // Replace with the actual user name you want to load feedback for
+$(document).ready(function() {
+    loadFeedbackList(userName);
+});
+    </script>
+</body>
+
+</html>
